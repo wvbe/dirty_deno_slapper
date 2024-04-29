@@ -1,6 +1,6 @@
-import { buildCss } from './buildCss.ts';
-import { BuildJavascriptOptions, buildJavascript } from './buildJavascript.ts';
-import { combineToXhtml } from './combineToXhtml.ts';
+import { buildCss } from './src/buildCss.ts';
+import { BuildJavascriptOptions, buildJavascript } from './src/buildJavascript.ts';
+import { combineToXhtml } from './src/combineToXhtml.ts';
 
 export type BuildOptions = BuildJavascriptOptions;
 
@@ -15,11 +15,11 @@ export type BuildOptions = BuildJavascriptOptions;
  *     );
  */
 export default async function slap(
-	tsModule: string,
+	tsModule: string | null,
 	cssModule: string | null,
-	options: BuildOptions,
+	options?: BuildOptions,
 ): Promise<string> {
-	const js = await buildJavascript(tsModule, options);
+	const js = tsModule ? [await buildJavascript(tsModule, options || {})] : [];
 	const css = cssModule ? [await buildCss(new URL(cssModule))] : [];
-	return combineToXhtml([js], css);
+	return combineToXhtml(js, css);
 }
