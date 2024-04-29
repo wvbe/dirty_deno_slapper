@@ -9,17 +9,17 @@ export type BuildOptions = BuildJavascriptOptions;
  *
  * For example:
  *
- *     const xhtml = await build(
+ *     const xhtml = await slap(
  *       import.meta.resolve('./application.tsx'),
  *       import.meta.resolve('./application.css')
  *     );
  */
-export async function build(
+export default async function slap(
 	tsModule: string,
-	cssModule: string,
+	cssModule: string | null,
 	options: BuildOptions,
 ): Promise<string> {
 	const js = await buildJavascript(tsModule, options);
-	const css = await buildCss(new URL(cssModule));
-	return combineToXhtml([js], [css]);
+	const css = cssModule ? [await buildCss(new URL(cssModule))] : [];
+	return combineToXhtml([js], css);
 }
