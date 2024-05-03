@@ -1,8 +1,8 @@
-import { buildCss } from './src/buildCss.ts';
-import { BuildJavascriptOptions, buildJavascript } from './src/buildJavascript.ts';
-import { combineToXhtml } from './src/combineToXhtml.ts';
+import { buildCss, type BuildCssOptions } from './src/buildCss.ts';
+import { buildJavascript, type BuildJavascriptOptions } from './src/buildJavascript.ts';
+import { combineToXhtml, type CombineXhtmlOptions } from './src/combineToXhtml.ts';
 
-export type BuildOptions = BuildJavascriptOptions;
+export type BuildOptions = BuildJavascriptOptions & CombineXhtmlOptions & BuildCssOptions;
 
 /**
  * Returns a simple XHTML page with the JavaScript and CSS combined.
@@ -20,6 +20,6 @@ export default async function slap(
 	options?: BuildOptions,
 ): Promise<string> {
 	const js = tsModule ? [await buildJavascript(tsModule, options || {})] : [];
-	const css = cssModule ? [await buildCss(new URL(cssModule))] : [];
-	return combineToXhtml(js, css);
+	const css = cssModule ? [await buildCss(new URL(cssModule), options || {})] : [];
+	return combineToXhtml(js, css, options || {});
 }

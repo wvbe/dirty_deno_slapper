@@ -10,7 +10,14 @@ function wrapJs(js: string) {
 	</script>`;
 }
 
-export function combineToXhtml(js: string[], css: string[]) {
+export type CombineXhtmlOptions = {
+	/**
+	 * If set, your <body> will contain one <div> with the given ID.
+	 */
+	inventedElementId?: string;
+};
+
+export function combineToXhtml(js: string[], css: string[], options: CombineXhtmlOptions) {
 	return `
 		<?xml version="1.0" encoding="utf-8"?>
 		<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -19,7 +26,7 @@ export function combineToXhtml(js: string[], css: string[]) {
 				${css.map(wrapCss).join('\n')}
 			</head>
 			<body>
-				<div id="root"/>
+				${options.inventedElementId && `<div id="${options.inventedElementId}"></div>`}
 				${js.map(wrapJs).join('\n')}
 			</body>
 		</html>
