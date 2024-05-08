@@ -10,6 +10,7 @@ export type BuildJavascriptOptions = {
 	 *     import.meta.resolve('../import_map.json')
 	 */
 	importMap?: string;
+	configPath?: string;
 	/**
 	 * Include an inline source map in the output?
 	 *
@@ -26,6 +27,7 @@ export async function buildJavascript(
 		plugins: [
 			...denoPlugins({
 				loader: 'portable',
+				configPath: options.configPath,
 				importMapURL: options.importMap,
 			}),
 		],

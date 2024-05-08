@@ -5,7 +5,7 @@ A real quick-and-dirty build system for a simple XHTML/TS/CSS page, because I ha
 In your `slap.ts`:
 
 ```sh
-const xhtml = await slap(
+await slap(
 	import.meta.resolve('./src/game/Game.ts'),
 	import.meta.resolve('./src/style.css'),
 	{
