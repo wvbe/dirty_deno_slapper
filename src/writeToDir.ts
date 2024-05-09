@@ -1,5 +1,7 @@
 import * as fs from 'https://deno.land/std@0.224.0/fs/mod.ts';
+
 import { type File } from './types.ts';
+
 export type WriteToDirOptions = {
 	destination: string;
 };

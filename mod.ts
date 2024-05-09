@@ -1,12 +1,15 @@
 import { buildCss, type BuildCssOptions } from './src/buildCss.ts';
 import { buildJavascript, type BuildJavascriptOptions } from './src/buildJavascript.ts';
 import { combineToXhtml, type CombineXhtmlOptions } from './src/combineToXhtml.ts';
+import { CopyStaticsOptions } from './src/copyAssets.ts';
+import { copyAssets } from './src/copyAssets.ts';
 import { WriteToDirOptions } from './src/writeToDir.ts';
 import { writeToDir } from './src/writeToDir.ts';
 
 export type BuildOptions = BuildJavascriptOptions &
 	CombineXhtmlOptions &
 	BuildCssOptions &
+	CopyStaticsOptions &
 	WriteToDirOptions;
 
 /**
@@ -28,6 +31,7 @@ export default async function slap(
 	const js = tsModule ? [await buildJavascript(tsModule, options || {})] : [];
 	const css = cssModule ? [await buildCss(new URL(cssModule), options || {})] : [];
 	const files = [combineToXhtml(js, css, options || {})];
+	await copyAssets(options || {});
 	await writeToDir(files, options || { destination: '_site' });
 	console.error(`slap: ${Date.now() - start}ms`);
 }
