@@ -10,7 +10,9 @@ export type BuildOptions = BuildJavascriptOptions &
 	CombineXhtmlOptions &
 	BuildCssOptions &
 	CopyStaticsOptions &
-	WriteToDirOptions;
+	WriteToDirOptions & {
+		showSlapTime?: boolean;
+	};
 
 /**
  * Compiles an XHTML page, CSS and JS embedded into it, and writes it to a location on disk.
@@ -33,5 +35,7 @@ export default async function slap(
 	const files = [combineToXhtml(js, css, options || {})];
 	await copyAssets(options || {});
 	await writeToDir(files, options || { destination: '_site' });
-	console.error(`slap: ${Date.now() - start}ms`);
+	if (options?.showSlapTime) {
+		console.error(`slap: ${Date.now() - start}ms`);
+	}
 }

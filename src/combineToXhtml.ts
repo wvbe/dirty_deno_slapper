@@ -17,6 +17,9 @@ export type CombineXhtmlOptions = {
 	 * If set, your <body> will contain one <div> with the given ID.
 	 */
 	inventedElementId?: string;
+	prerenderedHead?: {
+		title?: string;
+	};
 };
 
 export function combineToXhtml(js: string[], css: string[], options: CombineXhtmlOptions): File {
@@ -27,6 +30,7 @@ export function combineToXhtml(js: string[], css: string[], options: CombineXhtm
 			<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 			<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 				<head>
+					${options.prerenderedHead?.title ? `<title>${options.prerenderedHead.title}</title>` : ''}
 					${css.map(wrapCss).join('\n')}
 				</head>
 				<body>
