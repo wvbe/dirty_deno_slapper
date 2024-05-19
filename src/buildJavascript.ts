@@ -2,6 +2,8 @@ import * as esbuild from 'https://deno.land/x/esbuild@v0.17.18/mod.js';
 import { denoPlugins } from 'https://deno.land/x/esbuild_deno_loader@0.7.0/mod.ts';
 
 export type BuildJavascriptOptions = {
+	minify?: boolean;
+	mangle?: RegExp | false;
 	/**
 	 * Use an import map?
 	 *
@@ -31,6 +33,11 @@ export async function buildJavascript(
 				importMapURL: options.importMap,
 			}),
 		],
+		minify: options.minify || false,
+		minifyWhitespace: options.minify || false,
+		minifyIdentifiers: options.minify || false,
+		minifySyntax: options.minify || false,
+		mangleProps: options.mangle || undefined,
 		entryPoints: [tsModule],
 		bundle: true,
 		sourcemap: options.sourcemap || options.sourcemap === undefined ? 'inline' : false,

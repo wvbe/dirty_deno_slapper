@@ -1,8 +1,10 @@
 import postcss from 'npm:postcss';
 import postcssImport from 'npm:postcss-import';
 import postcssImageInliner from 'npm:postcss-image-inliner';
+import postcssMinify from 'npm:postcss-minify';
 
 export type BuildCssOptions = {
+	minify?: boolean;
 	/**
 	 * These folders are available to reference images from.
 	 */
@@ -15,16 +17,22 @@ export type BuildCssOptions = {
 
 export async function buildCss(cssModule: URL, options: BuildCssOptions): Promise<string> {
 	const css = await Deno.readTextFile(cssModule);
-	const result = await postcss()
-		.use(postcssImport())
-		.use(
-			postcssImageInliner({
-				assetPaths: options.imageAssetPaths || [],
-				maxFileSize: options.imageMaxFileSize,
-			}),
-		)
-		.process(css, {
-			from: cssModule.pathname,
-		});
+
+	let config = postcss();
+	config = config.use(postcssImport());
+	config = config.use(
+		postcssImageInliner({
+			assetPaths: options.imageAssetPaths || [],
+			maxFileSize: options.imageMaxFileSize,
+		}),
+	);
+	if (options.minify) {
+		config = config.use(postcssMinify());
+	}
+
+	const result = await config.process(css, {
+		from: cssModule.pathname,
+	});
+
 	return result.css;
 }
